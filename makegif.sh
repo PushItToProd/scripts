@@ -18,16 +18,16 @@ usage() {
 usage: $0 [options]
 
 options:
-    -i input file
-    -s start time
-    -d duration from start
-    -fps fps (optional, default: $fps)
-    -w width (optional, default: $width)
-    -fmt output format (optional, default: $format)
-    -stats_mode stats mode (optional, default $stats_mode)
-    -dither dithering mode (optional, default $dither)
-    -o output file (optional, default: [filename].$format)
-    -h print this message
+  -i           input file
+  -s           start time
+  -d           duration from start
+  -fps         fps (optional, default: $fps)
+  -w           width (optional, default: $width)
+  -fmt         output format (optional, default: $format)
+  -stats_mode  stats mode (optional, default $stats_mode)
+  -dither      dithering mode (optional, default $dither)
+  -o           output file (optional, default: [filename].$format)
+  -h           print this message
 EOF
   exit 1
 }
@@ -53,41 +53,49 @@ parse() {
     case "$flag" in
       -i)
         input="$1"
+        shift
         ;;
       -s)
         start="$1"
+        shift
         ;;
       -d)
         duration="$1"
+        shift
         ;;
       -fps)
         fps="$1"
+        shift
         ;;
       -w)
         width="$1"
+        shift
         ;;
       -o)
         output="$1"
+        shift
         ;;
       -fmt)
         format="$1"
+        shift
         ;;
       -stats_mode)
         stats_mode="$1"
+        shift
         ;;
       -dither)
         dither="$1"
+        shift
         ;;
       -h)
         usage
         exit
         ;;
       *)
-        echo "unrecognized argument: $1" >&2
+        echo "unrecognized argument: $flag" >&2
         exit 1
         ;;
     esac
-    shift
   done
   require_argument "$input" -i
   require_argument "$start" -s
