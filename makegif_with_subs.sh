@@ -126,7 +126,6 @@ make_gif_with_subs() {
   filter="
     [0:v] fps=${fps},
           scale=w=${width}:h=-1:flags=${scale_flags},
-          subtitles='${tmp}',
           split
           [a][b];
     [a] palettegen=stats_mode=${stats_mode} [p];
