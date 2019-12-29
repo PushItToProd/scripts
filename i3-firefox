@@ -1,22 +1,14 @@
 #!/usr/bin/env bash
-# A simple utility for opening windows and tabs in Firefox from i3. If
-# Firefox is open in the current workspace, open a tab in the last
-# focused window in the workspace, otherwise open a new window.
 # TODO: genericize to any application
 set -e
 set -o pipefail
 
 print_usage() {
   cat <<EOF
-$0 [-check [-q] | URL]
+$0 URL
 
--check: Just check if Firefox is open and print the result. Will
-        return 0 if it is open and 1 if it is not. Mutually exclusive
-        with the URL parameter.
--q: Only usable with -check. Must come after -check. Don't print a
-    message and just return the status code.
-
-If -check is not provided, you must pass a URL to open.
+Open URL in a new tab if Firefox is open in the current workspace or
+a new window if it is not.
 EOF
 }
 
@@ -28,37 +20,16 @@ focus_firefox() {
   i3-msg '[class="^Firefox$" workspace="__focused__"] focus'
 }
 
-do_check() {
-  if firefox_is_open; then
-    [[ "$1" != "-q" ]] && echo "firefox is open in this workspace"
-    return 0
-  else
-    [[ "$1" != "-q" ]] && echo "firefox is not open in this workspace"
-    return 1
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  if (( "$#" == 0 )); then
+    print_usage
+    exit 0
   fi
-}
 
-do_open() {
   if firefox_is_open; then
     focus_firefox
     firefox -new-tab "$@"
   else
     firefox -new-window "$@"
   fi
-}
-
-main() {
-  if (( "$#" == 0 )); then
-    print_usage
-    exit 0
-  fi
-
-  if [[ "$1" == "-check" ]]; then
-    shift
-    do_check "$@"
-    exit $?
-  else
-    do_open "$@"
-  fi
-}
-main "$@"
+fi
